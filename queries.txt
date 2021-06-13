@@ -1,0 +1,9 @@
+MATCH
+  (t:Tweet),
+  (c:Ciudad)
+WHERE t.user_name = 'diariocorreoec' AND c.name = 'Quito'
+CREATE (t)-[r:PROVIENE {name: t.user_name + '<->' + c.name}]->(c)
+RETURN type(r), r.name
+
+
+CREATE (n:Ciudad {name: 'Quito'})
