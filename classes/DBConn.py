@@ -19,10 +19,10 @@ class DBConn:
     Funciones para obtener los resultados de DAO.
     """
 
-    def get_create_tweet_result(self, _create_tweet, user_name, text):
+    def get_create_tweet_result(self, _create_tweet, provincia, user_name, text, sentimiento):
         with self.session as session:
-            result = session.write_transaction(_create_tweet, user_name, text)
-            print(result)
+            result = session.write_transaction(_create_tweet, provincia, user_name, text, sentimiento)
+            # print(result)
 
     def get_all_tweets_result(self, _all_tweets):
         with self.session as session:

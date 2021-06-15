@@ -1,3 +1,48 @@
+MATCH(p:Provincia)<-[r1]-(t:Tweet)-[r2]->(s:Sentimiento)
+WITH s.name AS sentimiento, count(r1) AS total
+RETURN apoc.map.fromValues([
+    sentimiento: {
+      "total", total  
+    } 
+    ])
+
+PARA NLTK: (IMPORTANTE)
+nltk.download('perluniprops')
+nltk.download('nonbreaking_prefixes')
+
+
+CREATE  (:Sentimiento {name: 'POS'}),
+        (:Sentimiento {name: 'NEU'}),
+        (:Sentimiento {name: 'NEG'}),
+        (:Sentimiento {name: 'UNK'})
+RETURN "Nodos Creadukis"
+
+CREATE  (:Provincia {name: 'Pichincha'}),
+        (:Provincia {name: 'Guayas'}),
+        (:Provincia {name: 'Esmeraldas'}),
+        (:Provincia {name: 'Manabi'}),
+        (:Provincia {name: 'Santo Domingo De Los Tsachilas'}),
+        (:Provincia {name: 'Los Rios'}),
+        (:Provincia {name: 'Santa Elena'}),
+        (:Provincia {name: 'Azuay'}),
+        (:Provincia {name: 'El Oro'}),
+        (:Provincia {name: 'Galapagos'}),
+        (:Provincia {name: 'Carchi'}),
+        (:Provincia {name: 'Imbabura'}),
+        (:Provincia {name: 'Cotopaxi'}),
+        (:Provincia {name: 'Tungurahua'}),
+        (:Provincia {name: 'Bolivar'}),
+        (:Provincia {name: 'Chimborazo'}),
+        (:Provincia {name: 'Canar'}),
+        (:Provincia {name: 'Loja'}),
+        (:Provincia {name: 'Sucumbios'}),
+        (:Provincia {name: 'Orellana'}),
+        (:Provincia {name: 'Napo'}),
+        (:Provincia {name: 'Pastaza'}),
+        (:Provincia {name: 'Morona Santiago'}),
+        (:Provincia {name: 'Zamora Chinchipe'})
+RETURN 'Creadukis'
+
 MATCH
   (t:Tweet),
   (c:Ciudad)
@@ -5,5 +50,17 @@ WHERE t.user_name = 'diariocorreoec' AND c.name = 'Quito'
 CREATE (t)-[r:PROVIENE {name: t.user_name + '<->' + c.name}]->(c)
 RETURN type(r), r.name
 
+CREATE (t:Tweet)-[:PROVIENE {name: "rel"}]->(p:Provincia {name: "Quito"})
+SET t.user_name = "david"
+SET t.text = "Wesos meco"
+RETURN t
 
-CREATE (n:Ciudad {name: 'Quito'})
+MATCH (p: Provincia {name: "Pichincha"}) 
+CREATE (p) <-[r: PROVIENE]- (t: Tweet { user_name: "deivid", text: "lol"}});
+
+MATCH (p: Provincia {name: 'Pichincha'})
+CREATE (p) <-[r: PROVIENE]- (t: Tweet)
+SET t.user_name = 'randely'
+SET t.text = 'A lo pelotero'
+SET t.feeling = 'Trimste'
+RETURN 'Tweet Crea3'
