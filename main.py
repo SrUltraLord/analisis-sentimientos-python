@@ -1,14 +1,16 @@
 import json
 import tweepy
+import pandas as pd
 
 from classes.DAO import DAO
 from textblob import TextBlob
+from utils.graphs import plot_bars, plot_mapbox
 from classes.DBConn import DBConn
-from utils.functions import covert_to_tag
+from utils.functions import covert_to_tag, create_bar_plot_csv_from_neo4j, create_map_plot_csv_from_neo4j
 from classes.TwitterApi import TwitterApi
 from textblob.sentiments import NaiveBayesAnalyzer
 from utils.diccionario_provincias import diccionario
-# from classes.Listener import StreamListener
+
 
 if __name__ == '__main__':
 
@@ -23,45 +25,33 @@ if __name__ == '__main__':
     # Creación del objeto para la API de twitter
     twitter_api = TwitterApi(settings["twitterCredentials"])
 
-    # Solo es necesario si se va a hacer búsqueda de tweets en vivo
-    # stream_listener = StreamListener()
-    # stream = twitter_api.get_stream_listener(stream_listener)
-
     # Objeto para hacer la conexión con la Base de Datos
     db_conn = DBConn(settings["db"])
+
     # Objeto con las sentencias de Neo4J
     dao = DAO()
 
     # Se crea el objeto api que se obtiene del objeto twitter_api
     api = twitter_api.get_api()
 
-    public_tweets = api.home_timeline()
-
     '''
     PARAMS DE BUSQUEDA DE LOS TWEETS
     '''
-    query = "ecuador AND covid AND vacunacion"
+    query = "(clases OR presenciales) AND retorno AND ecuador"
 
-    # Rectangulo de coordenadas. (Fucniona solo en streams)
-    # Sup Izq: 1.625176, -91.698380
-    # Inf Der: -4.868121, -75.195056
-    # coords_ecuador = [-91.698380, -4.868121, -75.195056, 1.625176]
-
-    # stream.filter(locations=coords_ecuador)
-
+    '''
+    BUSQUEDA DE LOS TWEETS Y GUARDAR EN LA BASE DE DATOS    
+    '''
     tweet_list = tweepy.Cursor(
         api.search, q=query, lang="es").items(NUM_OF_TWEETS)
-
+    '''
     for tweet in tweet_list:
         # Proceso de análisis de sentimientos.
         texto = TextBlob(tweet.text).translate(to='en')
         blob = TextBlob(str(texto), analyzer=NaiveBayesAnalyzer())
-        sentimiento = covert_to_tag(blob.sentiment[1], blob.sentiment[2])
+        tweet_index = blob.sentiment[1] - blob.sentiment[2]
 
-        # LOGS
-        # print(f"@{tweet.user.screen_name}:\n{tweet.text}")
-        # print(sentimiento)
-        # print('*' * 60)
+        sentimiento = covert_to_tag(blob.sentiment[1], blob.sentiment[2])
 
         # La ubicación del tweet (en caso de que esté disponible)
         # se pasa a minúsculas y se quita las comaas y es transformada
@@ -80,6 +70,7 @@ if __name__ == '__main__':
                     provincia,
                     tweet.user.screen_name,
                     tweet.text,
+                    tweet_index,
                     sentimiento
                 )
                 break
@@ -91,5 +82,23 @@ if __name__ == '__main__':
                 "Desconocida",
                 tweet.user.screen_name,
                 tweet.text,
+                tweet_index,
                 sentimiento
             )
+    '''
+
+    '''
+    CREACION DE LOS GRAFICOS
+    '''
+    # Grafico de Barras
+    # Conversion de json (db) a csv
+    data = db_conn.get_every_province_stats(dao._every_province_stats)
+    create_bar_plot_csv_from_neo4j(data)
+
+    plot_bars()
+
+    # Grafico de Mapa
+    # data_map = db_conn.get_every_province_index(dao._every_province_index)
+    # create_map_plot_csv_from_neo4j(data_map)
+
+    # plot_mapbox()
