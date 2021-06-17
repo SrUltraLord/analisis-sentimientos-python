@@ -15,7 +15,7 @@ from utils.diccionario_provincias import diccionario
 if __name__ == '__main__':
 
     # Constantes
-    NUM_OF_TWEETS = 10
+    NUM_OF_TWEETS = 5
 
     # Abrir el archivo de configuraciones y definirlo como diccionario
     # de Python
@@ -44,6 +44,7 @@ if __name__ == '__main__':
     '''
     tweet_list = tweepy.Cursor(
         api.search, q=query, lang="es").items(NUM_OF_TWEETS)
+
     '''
     for tweet in tweet_list:
         # Proceso de análisis de sentimientos.
@@ -60,6 +61,7 @@ if __name__ == '__main__':
             ",", " ").replace(".", " ").split()
 
         tweet_set = set(location_arr)
+
         for provincia in diccionario:
             # Intersección entre el set de ubicación del tweet
             # y el diccionario de sets por provincia.

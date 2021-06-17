@@ -1,8 +1,11 @@
 ,name,POS,NEG,NEU
-0,Pichincha,4,0,0
-1,Desconocida,20,0,4
-2,Chimborazo,2,0,0
-3,El Oro,4,0,0
-4,Santo Domingo de los Tsachilas,2,0,0
-5,Guayas,2,0,0
-6,Manabi,2,0,0
+0,Desconocida,51,8,4
+1,Azuay,4,3,0
+2,Loja,1,0,0
+3,Pichincha,10,3,0
+4,Guayas,7,0,0
+5,Chimborazo,4,0,0
+6,Manabi,4,0,0
+7,Imbabura,1,0,0
+8,El Oro,5,0,0
+9,Santo Domingo de los Tsachilas,2,0,0
