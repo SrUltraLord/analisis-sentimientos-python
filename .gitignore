@@ -1,5 +1,6 @@
 settings.json
 queries.txt
+*.csv
 
 __pycache__/
 .vscode/

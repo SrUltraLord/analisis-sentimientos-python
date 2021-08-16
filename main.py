@@ -45,7 +45,6 @@ if __name__ == '__main__':
     tweet_list = tweepy.Cursor(
         api.search, q=query, lang="es").items(NUM_OF_TWEETS)
 
-    '''
     for tweet in tweet_list:
         # Proceso de análisis de sentimientos.
         texto = TextBlob(tweet.text).translate(to='en')
@@ -88,16 +87,14 @@ if __name__ == '__main__':
                 sentimiento
             )
     '''
-
-    '''
     CREACION DE LOS GRAFICOS
     '''
     # Grafico de Barras
     # Conversion de json (db) a csv
-    data = db_conn.get_every_province_stats(dao._every_province_stats)
-    create_bar_plot_csv_from_neo4j(data)
+    # data = db_conn.get_every_province_stats(dao._every_province_stats)
+    # create_bar_plot_csv_from_neo4j(data)
 
-    plot_bars()
+    # plot_bars()
 
     # Grafico de Mapa
     # data_map = db_conn.get_every_province_index(dao._every_province_index)
